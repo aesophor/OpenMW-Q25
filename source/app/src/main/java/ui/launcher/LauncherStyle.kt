@@ -40,15 +40,15 @@ import android.widget.TextView
  * and the main action. Every button, toggle and option has the same height.
  */
 object LauncherStyle {
-    const val PANEL = 0xff1e1914.toInt()
-    const val SURFACE = 0xff2a231b.toInt()
-    const val SURFACE_PRESSED = 0xff332a20.toInt()
-    const val CARD = 0xff241e17.toInt()
-    const val BORDER = 0xff4a3e30.toInt()
+    const val PANEL = 0xff120f0c.toInt()
+    const val SURFACE = 0xff1c1712.toInt()
+    const val SURFACE_PRESSED = 0xff251e17.toInt()
+    const val CARD = 0xff17130f.toInt()
+    const val BORDER = 0xff352c22.toInt()
     const val INK = 0xffefe6d4.toInt()
     const val MUTED = 0xffb0a28a.toInt()
     const val GOLD = 0xffc9a465.toInt()
-    const val ACTIVE = 0xff4a3a22.toInt()
+    const val ACTIVE = 0xff3a2d1a.toInt()
     const val FOCUS = 0xffe8c983.toInt()
 
     // The update button's colours, as in CubeEvil4.
@@ -118,7 +118,7 @@ object LauncherStyle {
             setPadding(dp(context, 16), 0, dp(context, 16), 0)
             if (primary) {
                 setTextColor(GOLD)
-                background = background(context, ACTIVE, GOLD, pressed = 0xff5a4729.toInt())
+                background = background(context, ACTIVE, GOLD, pressed = 0xff4a3a22.toInt())
             } else {
                 setTextColor(INK)
                 background = background(context, SURFACE, BORDER)

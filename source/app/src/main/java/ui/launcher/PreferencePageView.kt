@@ -309,7 +309,7 @@ class PreferencePageView(
             state.text = context.getString(if (on) R.string.launcher_on else R.string.launcher_off)
             state.setTextColor(if (on) LauncherStyle.GOLD else LauncherStyle.MUTED)
             view.background = if (on)
-                LauncherStyle.background(context, LauncherStyle.ACTIVE, LauncherStyle.GOLD, pressed = 0xff5a4729.toInt())
+                LauncherStyle.background(context, LauncherStyle.ACTIVE, LauncherStyle.GOLD, pressed = 0xff4a3a22.toInt())
             else
                 LauncherStyle.background(context, LauncherStyle.SURFACE, LauncherStyle.BORDER)
         }
@@ -334,7 +334,7 @@ class PreferencePageView(
                 val selected = values[index].toString() == preference.value
                 button.setTextColor(if (selected) LauncherStyle.GOLD else LauncherStyle.INK)
                 button.background = if (selected)
-                    LauncherStyle.background(context, LauncherStyle.ACTIVE, LauncherStyle.GOLD, pressed = 0xff5a4729.toInt())
+                    LauncherStyle.background(context, LauncherStyle.ACTIVE, LauncherStyle.GOLD, pressed = 0xff4a3a22.toInt())
                 else
                     LauncherStyle.background(context, LauncherStyle.SURFACE, LauncherStyle.BORDER)
             }
