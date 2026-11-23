@@ -2931,7 +2931,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "OpenMW-Launcher"
-        private const val PROJECT_URL = "https://github.com/Andiweli/OpenMW-Android"
+        private const val PROJECT_URL = "https://github.com/aesophor/OpenMW-Q25"
         const val EXTRA_PLAY = "launcher_play"
 
         // v11.x shared custom-resolution state. MouseCursor and GameActivity
