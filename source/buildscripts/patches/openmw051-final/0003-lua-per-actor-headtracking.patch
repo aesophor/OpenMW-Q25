@@ -1,0 +1,55 @@
+diff -ruN a/apps/openmw/mwbase/luamanager.hpp b/apps/openmw/mwbase/luamanager.hpp
+--- a/apps/openmw/mwbase/luamanager.hpp	2026-05-30 21:30:14.000000000 +0800
++++ b/apps/openmw/mwbase/luamanager.hpp	2026-11-19 21:46:20.986657688 +0800
+@@ -133,6 +133,7 @@
+         struct ActorControls
+         {
+             bool mDisableAI = false;
++            bool mDisableHeadTracking = false;
+             bool mChanged = false;
+ 
+             bool mJump = false;
+diff -ruN a/apps/openmw/mwlua/localscripts.cpp b/apps/openmw/mwlua/localscripts.cpp
+--- a/apps/openmw/mwlua/localscripts.cpp	2026-05-30 21:30:14.000000000 +0800
++++ b/apps/openmw/mwlua/localscripts.cpp	2026-11-19 21:46:20.988364525 +0800
+@@ -77,6 +77,8 @@
+         selfAPI["controls"] = sol::readonly_property([](SelfObject& self) { return &self.mControls; });
+         selfAPI["isActive"] = [](SelfObject& self) -> bool { return self.mIsActive; };
+         selfAPI["enableAI"] = [](SelfObject& self, bool v) { self.mControls.mDisableAI = !v; };
++        selfAPI["enableHeadTracking"]
++            = [](SelfObject& self, bool v) { self.mControls.mDisableHeadTracking = !v; };
+         selfAPI["ATTACK_TYPE"]
+             = LuaUtil::makeStrictReadOnly(LuaUtil::tableFromPairs<std::string_view, MWMechanics::AttackType>(lua,
+                 { { "NoAttack", MWMechanics::AttackType::NoAttack }, { "Any", MWMechanics::AttackType::Any },
+diff -ruN a/apps/openmw/mwmechanics/actors.cpp b/apps/openmw/mwmechanics/actors.cpp
+--- a/apps/openmw/mwmechanics/actors.cpp	2026-05-30 21:30:14.000000000 +0800
++++ b/apps/openmw/mwmechanics/actors.cpp	2026-11-19 21:46:20.989031693 +0800
+@@ -1609,7 +1609,12 @@
+                             }
+                         }
+                         if (mTimerUpdateHeadTrack == 0)
+-                            updateHeadTracking(actor.getPtr(), mActors, isPlayer, ctrl);
++                        {
++                            if (luaControls && luaControls->mDisableHeadTracking)
++                                ctrl.setHeadTrackTarget(MWWorld::ConstPtr());
++                            else
++                                updateHeadTracking(actor.getPtr(), mActors, isPlayer, ctrl);
++                        }
+ 
+                         if (actor.getPtr().getClass().isNpc() && !isPlayer)
+                             updateCrimePursuit(actor.getPtr(), duration, cachedAllies);
+diff -ruN a/files/lua_api/openmw/self.lua b/files/lua_api/openmw/self.lua
+--- a/files/lua_api/openmw/self.lua	2026-05-30 21:30:14.000000000 +0800
++++ b/files/lua_api/openmw/self.lua	2026-11-19 21:46:20.989447277 +0800
+@@ -54,4 +54,11 @@
+ -- @param Self
+ -- @param #boolean v
+ 
++---
++-- Enables or disables head tracking (enabled by default). While disabled, the actor does not turn its head
++-- towards nearby actors. Not saved; scripts should reapply it after loading.
++-- @function [parent=#Self] enableHeadTracking
++-- @param Self
++-- @param #boolean v
++
+ return nil
