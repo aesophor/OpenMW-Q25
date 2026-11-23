@@ -613,7 +613,8 @@ set(OPENMW_PATCH
         python3 ${CMAKE_SOURCE_DIR}/patches/openmw051-final/apply-android-graphics-followup3.py <SOURCE_DIR> &&
         python3 ${CMAKE_SOURCE_DIR}/patches/openmw051-final/apply-android-graphics-followup4.py <SOURCE_DIR> &&
         patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/openmw051-final/0003-lua-per-actor-headtracking.patch &&
-        patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/openmw051-final/0004-lua-holstered-shield-offset.patch
+        patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/openmw051-final/0004-lua-holstered-shield-offset.patch &&
+        patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/openmw051-final/0005-main-menu-unscaled-buttons.patch
 )
 ExternalProject_Add(openmw
         DEPENDS boost openal osg mygui ffmpeg sdl2 bullet lz4 luajit libicu
