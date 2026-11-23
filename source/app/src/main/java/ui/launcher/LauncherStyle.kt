@@ -166,15 +166,6 @@ object LauncherStyle {
                 setPadding(d(26), 0, d(26), 0) // as wide as Play on the home screen
             }, LinearLayout.LayoutParams(small))
         }
-        val footer = LinearLayout(context).apply {
-            orientation = LinearLayout.HORIZONTAL
-            setPadding(d(22), d(8), d(22), d(10))
-            addView(text(context, context.getString(com.libopenmw.openmw.R.string.launcher_hint_navigate), 13f, false).apply {
-                maxLines = 1
-                ellipsize = TextUtils.TruncateAt.END
-            }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
-            addView(text(context, context.getString(com.libopenmw.openmw.R.string.launcher_hint_back_play), 13f, false).apply { maxLines = 1 })
-        }
         fun line(color: Int, height: Int) = View(context).apply { setBackgroundColor(color) } to
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, d(height))
         return LinearLayout(context).apply {
@@ -184,8 +175,6 @@ object LauncherStyle {
             addView(header, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
             line(BORDER, 1).let { addView(it.first, it.second) }
             addView(content, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
-            line(BORDER, 1).let { addView(it.first, it.second) }
-            addView(footer, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT))
         }
     }
 

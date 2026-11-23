@@ -249,11 +249,8 @@
     <string name="launcher_tile_mods_summary">Plugins, Reihenfolge, Groundcover</string>
     <string name="launcher_tile_help">Hilfe &amp; Info</string>
     <string name="launcher_tile_help_summary">Über, Zurücksetzen, GitHub</string>
-    <string name="launcher_hint_navigate">Steuerkreuz: navigieren · A: auswählen</string>
-    <string name="launcher_hint_play">START: spielen</string>
     <string name="launcher_help_github">Projekt auf GitHub</string>
     <string name="launcher_back">‹ Zurück</string>
-    <string name="launcher_hint_back_play">B: zurück · START: spielen</string>
     <string name="launcher_on">AN</string>
     <string name="launcher_off">AUS</string>
     <string name="launcher_section_onscreen">Bildschirmtasten anordnen</string>

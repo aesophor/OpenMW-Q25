@@ -249,11 +249,8 @@
     <string name="launcher_tile_mods_summary">Wtyczki, kolejność, roślinność</string>
     <string name="launcher_tile_help">Pomoc i informacje</string>
     <string name="launcher_tile_help_summary">O aplikacji, reset, GitHub</string>
-    <string name="launcher_hint_navigate">Krzyżak: nawigacja · A: wybór</string>
-    <string name="launcher_hint_play">START: graj</string>
     <string name="launcher_help_github">Projekt na GitHubie</string>
     <string name="launcher_back">‹ Wstecz</string>
-    <string name="launcher_hint_back_play">B: wstecz · START: graj</string>
     <string name="launcher_on">WŁ.</string>
     <string name="launcher_off">WYŁ.</string>
     <string name="launcher_section_onscreen">Układ przycisków ekranowych</string>

@@ -19,7 +19,6 @@ package ui.launcher
 
 import android.content.Context
 import android.graphics.Typeface
-import android.text.TextUtils
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
@@ -90,9 +89,6 @@ class LauncherHomeView(context: Context, private val actions: Actions) : LinearL
             addView(body(), LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
         }
         addView(scroll, LayoutParams(LayoutParams.MATCH_PARENT, 0, 1f))
-
-        addView(separator(), LayoutParams(LayoutParams.MATCH_PARENT, dp(1)))
-        addView(footer(), LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
     }
 
     private fun separator() = View(context).apply { setBackgroundColor(LauncherStyle.BORDER) }
@@ -207,17 +203,6 @@ class LauncherHomeView(context: Context, private val actions: Actions) : LinearL
                 addView(buttons, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT).apply { topMargin = dp(10) })
             }
         }
-    }
-
-    private fun footer(): View = LinearLayout(context).apply {
-        orientation = HORIZONTAL
-        gravity = Gravity.CENTER_VERTICAL
-        setPadding(dp(22), dp(8), dp(22), dp(10))
-        addView(LauncherStyle.text(context, s(R.string.launcher_hint_navigate), 13f, false).apply {
-            maxLines = 1
-            ellipsize = TextUtils.TruncateAt.END
-        }, LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f))
-        addView(LauncherStyle.text(context, s(R.string.launcher_hint_play), 13f, false).apply { maxLines = 1 })
     }
 
     fun setVersion(version: String) {

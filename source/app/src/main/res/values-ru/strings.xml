@@ -249,11 +249,8 @@
     <string name="launcher_tile_mods_summary">Плагины, порядок загрузки, растительность</string>
     <string name="launcher_tile_help">Справка</string>
     <string name="launcher_tile_help_summary">О программе, сброс, GitHub</string>
-    <string name="launcher_hint_navigate">Крестовина: навигация · A: выбор</string>
-    <string name="launcher_hint_play">START: играть</string>
     <string name="launcher_help_github">Проект на GitHub</string>
     <string name="launcher_back">‹ Назад</string>
-    <string name="launcher_hint_back_play">B: назад · START: играть</string>
     <string name="launcher_on">ВКЛ</string>
     <string name="launcher_off">ВЫКЛ</string>
     <string name="launcher_section_onscreen">Расположение экранных кнопок</string>
