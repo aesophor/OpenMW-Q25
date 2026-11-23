@@ -615,7 +615,8 @@ set(OPENMW_PATCH
         patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/openmw051-final/0003-lua-per-actor-headtracking.patch &&
         patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/openmw051-final/0004-lua-holstered-shield-offset.patch &&
         patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/openmw051-final/0005-main-menu-unscaled-buttons.patch &&
-        patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/openmw051-final/0006-controller-single-window-trade-container.patch
+        patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/openmw051-final/0006-controller-single-window-trade-container.patch &&
+        patch -d <SOURCE_DIR> -p1 -t -N < ${CMAKE_SOURCE_DIR}/patches/openmw051-final/0007-hud-effect-icons-wrap.patch
 )
 ExternalProject_Add(openmw
         DEPENDS boost openal osg mygui ffmpeg sdl2 bullet lz4 luajit libicu

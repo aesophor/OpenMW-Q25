@@ -1,0 +1,96 @@
+diff -ru a/apps/openmw/mwgui/hud.cpp b/apps/openmw/mwgui/hud.cpp
+--- a/apps/openmw/mwgui/hud.cpp	2026-11-23 01:09:05.232595469 +0800
++++ b/apps/openmw/mwgui/hud.cpp	2026-11-23 01:09:05.463604877 +0800
+@@ -308,7 +308,11 @@
+             mWeaponSpellBox->setPosition(mWeaponSpellBox->getPosition() + MyGUI::IntPoint(0, 20));
+         }
+ 
+-        mSpellIcons->updateWidgets(mEffectBox, true);
++        // Wrap the effect icons into more rows instead of growing over the health/magicka/fatigue bars
++        // (the bars are followed by their value text, so leave room for that too)
++        constexpr int statValueWidth = 40;
++        const int barsRight = mHealthFrame->getLeft() + mHealth->getRight() + statValueWidth;
++        mSpellIcons->updateWidgets(mEffectBox, true, std::max(0, mEffectBox->getRight() - barsRight));
+ 
+         if (mEnemyActor.isSet() && mEnemyHealth->getVisible())
+         {
+diff -ru a/apps/openmw/mwgui/spellicons.cpp b/apps/openmw/mwgui/spellicons.cpp
+--- a/apps/openmw/mwgui/spellicons.cpp	2026-11-23 01:09:05.214514027 +0800
++++ b/apps/openmw/mwgui/spellicons.cpp	2026-11-23 01:09:05.445604810 +0800
+@@ -1,5 +1,8 @@
+ #include "spellicons.hpp"
+ 
++#include <algorithm>
++#include <limits>
++
+ #include <iomanip>
+ #include <set>
+ #include <sstream>
+@@ -85,7 +88,7 @@
+         }
+     }
+ 
+-    void SpellIcons::updateWidgets(MyGUI::Widget* parent, bool adjustSize)
++    void SpellIcons::updateWidgets(MyGUI::Widget* parent, bool adjustSize, int maxWidth)
+     {
+         for (auto& [effectId, widget] : mWidgetMap)
+         {
+@@ -93,9 +96,11 @@
+             widget->getUserData<ToolTipInfo>()->text.clear();
+         }
+ 
+-        int horizontalOffset = 2;
+-        constexpr int verticalOffset = 2;
++        constexpr int margin = 2;
+         constexpr int size = 16;
++        const int iconsPerRow
++            = maxWidth > 0 ? std::max(1, (maxWidth - 2 * margin) / size) : std::numeric_limits<int>::max();
++        int iconCount = 0;
+ 
+         const MWWorld::ESMStore& store = *MWBase::Environment::get().getESMStore();
+         static const float fadeTime = store.get<ESM::GameSetting>().find("fMagicStartIconBlink")->mValue.getFloat();
+@@ -123,11 +128,12 @@
+                 MyGUI::ImageBox& widget = *mWidgetMap[effectId];
+                 if (activeEffects.emplace(effectId).second)
+                 {
+-                    widget.setPosition(horizontalOffset, verticalOffset);
++                    widget.setPosition(
++                        margin + (iconCount % iconsPerRow) * size, margin + (iconCount / iconsPerRow) * size);
+                     widget.setVisible(true);
+                     if (source.mDuration >= fadeTime && fadeTime > 0.f)
+                         widget.setAlpha(std::min(source.mTimeLeft / fadeTime, 1.f));
+-                    horizontalOffset += size;
++                    ++iconCount;
+                 }
+ 
+                 std::string& desc = widget.getUserData<ToolTipInfo>()->text;
+@@ -154,10 +160,12 @@
+ 
+         if (adjustSize)
+         {
+-            const int newWidth = horizontalOffset > 2 ? horizontalOffset + 2 : 0;
+-            const int diff = parent->getWidth() - newWidth;
+-            parent->setSize(newWidth, parent->getHeight());
+-            parent->setPosition(parent->getLeft() + diff, parent->getTop());
++            const int columns = std::min(iconCount, iconsPerRow);
++            const int rows = iconCount > 0 ? (iconCount + iconsPerRow - 1) / iconsPerRow : 1;
++            const int newWidth = iconCount > 0 ? columns * size + 2 * margin : 0;
++            const int newHeight = rows * size + 2 * margin;
++            // Keep the right and bottom edges in place
++            parent->setCoord(parent->getRight() - newWidth, parent->getBottom() - newHeight, newWidth, newHeight);
+         }
+ 
+         for (auto& [effectId, widget] : mWidgetMap)
+diff -ru a/apps/openmw/mwgui/spellicons.hpp b/apps/openmw/mwgui/spellicons.hpp
+--- a/apps/openmw/mwgui/spellicons.hpp	2026-11-23 01:09:05.195603872 +0800
++++ b/apps/openmw/mwgui/spellicons.hpp	2026-11-23 01:09:05.429623583 +0800
+@@ -17,7 +17,8 @@
+     class SpellIcons
+     {
+     public:
+-        void updateWidgets(MyGUI::Widget* parent, bool adjustSize);
++        /// maxWidth > 0 wraps the icons into rows no wider than that; with adjustSize the parent then grows upwards.
++        void updateWidgets(MyGUI::Widget* parent, bool adjustSize, int maxWidth = 0);
+ 
+     private:
+         std::map<ESM::RefId, MyGUI::ImageBox*> mWidgetMap;
