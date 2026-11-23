@@ -250,10 +250,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
         refreshHome()
 
-        // Google Play updates the Automotive build itself, so it shows no update button.
-        if (!BuildConfig.IS_AUTOMOTIVE_BUILD)
-            ui.launcher.LauncherUpdate.check(BuildConfig.VERSION_NAME, updateListener)
-
+        // No update check, so the update button stays hidden.
         view.playButton.requestFocus()
     }
 

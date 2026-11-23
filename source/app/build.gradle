@@ -181,7 +181,6 @@ tasks.register('verifyOpenMwPayload') {
                 !launcherMainActivity.contains('private fun initializeLauncher(savedInstanceState: Bundle?)') ||
                 !launcherMainActivity.contains('private fun showHome()') ||
                 !launcherMainActivity.contains('ui.launcher.LauncherHomeView(this') ||
-                !launcherMainActivity.contains('ui.launcher.LauncherUpdate.check(BuildConfig.VERSION_NAME') ||
                 launcherMainActivity.contains('Gate H5a') ||
                 launcherMainActivity.indexOf('text = "ARM64 \\u2022 v${BuildConfig.VERSION_NAME}"') >
                     launcherMainActivity.indexOf('getString(R.string.about_port_info)')) {
