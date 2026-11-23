@@ -797,8 +797,8 @@ android {
         }
 
         debug {
-            // Deliberately no applicationIdSuffix. Debug and release both use
-            // com.ast.openmw, so Android gives both the same app-specific data path.
+            // Installs next to the signed release build as dev.aesophor.openmw (set in
+            // androidComponents below), with its own app-specific data path.
             debuggable true
         }
     }
@@ -852,6 +852,9 @@ androidComponents {
         if (variantBuilder.productFlavors.any { flavor -> flavor.second == "automotive" }) {
             variantBuilder.enable = false
         }
+    }
+    onVariants(selector().withBuildType("debug")) { variant ->
+        variant.applicationId.set("dev.aesophor.openmw")
     }
 }
 
