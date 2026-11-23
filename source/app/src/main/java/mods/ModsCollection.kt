@@ -124,12 +124,12 @@ class ModsCollection(
                 }
             }
 
-            // Blacklist "Data Files" in Directories tab and default plugins in Groundcovers tab.
+            // Blacklist "Data Files" and the Mods folder in Directories tab and default plugins in Groundcovers tab.
             val blacklist = mutableSetOf<String>()
             if (type == ModType.Dir) {
                 File(dataPath).listFiles()
-                    ?.firstOrNull { it.name.equals("Data Files", ignoreCase = true) }
-                    ?.let { blacklist.add(it.name) }
+                    ?.filter { it.name.equals("Data Files", ignoreCase = true) || ModsPaths.isModsFolder(it) }
+                    ?.forEach { blacklist.add(it.name) }
             }
             if (type == ModType.Groundcover) {
                 blacklist.add("Morrowind.esm")

@@ -24,25 +24,49 @@ object ModsPaths {
         return dataFiles.parentFile ?: File("")
     }
 
-    /** Path list used by the Directories tab. */
-    fun directoryRoots(ctx: Context): ArrayList<String> =
-        arrayListOf(gameRoot(ctx).absolutePath)
+    /** Optional folder next to Data Files that holds additional mod directories. */
+    const val MODS_DIRECTORY = "Mods"
+
+    /** True if [dir] is the Mods folder itself (not a mod directory). */
+    fun isModsFolder(dir: File): Boolean =
+        dir.name.equals(MODS_DIRECTORY, ignoreCase = true) &&
+            File(dir.parentFile, "Data Files").isDirectory
+
+    /**
+     * Path list used by the Directories tab: the game root (mod directories
+     * next to Data Files) and, if present, the Mods folder.
+     */
+    fun directoryRoots(ctx: Context): ArrayList<String> {
+        val root = gameRoot(ctx)
+        val result = arrayListOf(root.absolutePath)
+        root.listFiles()
+            ?.firstOrNull { it.isDirectory && isModsFolder(it) }
+            ?.let { result.add(it.absolutePath) }
+        return result
+    }
+
+    /** Resolves a Directories-tab entry (a bare directory name) against the directory roots. */
+    private fun resolveDirectory(roots: List<String>, name: String): File? =
+        roots.asSequence().map { File(it, name) }.firstOrNull { it.isDirectory }
 
     /**
      * Returns the base Data Files directory plus every additional directory
-     * next to it. This is used by the mod manager so enable/load-order state
-     * is preserved even while an additional data directory is disabled.
+     * next to it or inside the Mods folder. This is used by the mod manager so
+     * enable/load-order state is preserved even while an additional data
+     * directory is disabled.
      */
     fun allDataDirectories(ctx: Context): ArrayList<String> {
         val dataFiles = GameInstaller.getDataFilesFile(ctx)
         val result = arrayListOf(dataFiles.absolutePath)
-        val root = dataFiles.parentFile ?: return result
+        if (dataFiles.parentFile == null) return result
 
-        root.listFiles()
-            ?.asSequence()
-            ?.filter { it.isDirectory }
-            ?.filterNot { it.absoluteFile == dataFiles.absoluteFile }
-            ?.mapTo(result) { it.absolutePath }
+        directoryRoots(ctx).forEach { root ->
+            File(root).listFiles()
+                ?.asSequence()
+                ?.filter { it.isDirectory }
+                ?.filterNot { it.absoluteFile == dataFiles.absoluteFile || isModsFolder(it) }
+                ?.mapTo(result) { it.absolutePath }
+        }
 
         return result
     }
@@ -57,19 +81,15 @@ object ModsPaths {
     ): ArrayList<String> {
         val dataFiles = GameInstaller.getDataFilesFile(ctx)
         val result = arrayListOf(dataFiles.absolutePath)
-        val root = dataFiles.parentFile ?: return result
+        if (dataFiles.parentFile == null) return result
 
-        val directories = ModsCollection(
-            ModType.Dir,
-            arrayListOf(root.absolutePath),
-            db
-        )
+        val roots = directoryRoots(ctx)
+        val directories = ModsCollection(ModType.Dir, roots, db)
 
         directories.mods
             .asSequence()
             .filter { it.enabled }
-            .map { File(root, it.filename) }
-            .filter { it.isDirectory }
+            .mapNotNull { resolveDirectory(roots, it.filename) }
             .mapTo(result) { it.absolutePath }
 
         return result
