@@ -66,6 +66,8 @@ object LauncherStyle {
 
     /** Height of every button, toggle and option, in dp: the height of the home screen tiles. */
     const val CONTROL_HEIGHT = 60
+    /** Height of the Back and Play buttons in a header row, in dp: the height of the app icon. */
+    const val HEADER_BUTTON_HEIGHT = 40
     /** Gap between controls and around rows, in dp. */
     const val GAP = 8
     const val BUTTON_RADIUS = 6
@@ -150,7 +152,8 @@ object LauncherStyle {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             setPadding(d(22), d(12), d(22), d(12))
-            addView(button(context, context.getString(com.libopenmw.openmw.R.string.launcher_back)) { onBack() })
+            val small = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, d(HEADER_BUTTON_HEIGHT))
+            addView(button(context, context.getString(com.libopenmw.openmw.R.string.launcher_back)) { onBack() }.apply { minHeight = 0 }, small)
             addView(text(context, title, 22f, true).apply {
                 maxLines = 1
                 ellipsize = TextUtils.TruncateAt.END
@@ -158,7 +161,10 @@ object LauncherStyle {
                 marginStart = d(16)
                 marginEnd = d(16)
             })
-            addView(button(context, context.getString(com.libopenmw.openmw.R.string.launcher_play), primary = true) { onPlay() })
+            addView(button(context, context.getString(com.libopenmw.openmw.R.string.launcher_play), primary = true) { onPlay() }.apply {
+                minHeight = 0
+                setPadding(d(26), 0, d(26), 0) // as wide as Play on the home screen
+            }, LinearLayout.LayoutParams(small))
         }
         val footer = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL

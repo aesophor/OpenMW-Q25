@@ -55,6 +55,8 @@ class LauncherHomeView(context: Context, private val actions: Actions) : LinearL
     private fun s(id: Int) = context.getString(id)
 
     private val wide = context.resources.configuration.screenWidthDp >= 560
+    // The header row (icon, name, version, Play) needs less room than the cards below.
+    private val wideHeader = context.resources.configuration.screenWidthDp >= 400
 
     val playButton: TextView = LauncherStyle.button(context, s(R.string.launcher_play), primary = true) { actions.play() }.apply {
         setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
@@ -105,7 +107,7 @@ class LauncherHomeView(context: Context, private val actions: Actions) : LinearL
             maxLines = 1
         }
 
-        // The app icon in front of the name.
+        // The app icon in front of the name, the installed version after it.
         val brand = LinearLayout(context).apply {
             orientation = HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -114,25 +116,32 @@ class LauncherHomeView(context: Context, private val actions: Actions) : LinearL
                 scaleType = ImageView.ScaleType.FIT_CENTER
                 importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
             }, LayoutParams(dp(40), dp(40)).apply { marginEnd = dp(12) })
-            addView(mark)
+            // Own row so the name and the version share a baseline (CENTER_VERTICAL ignores baselines).
+            addView(LinearLayout(context).apply {
+                orientation = HORIZONTAL
+                addView(mark)
+                addView(versionLabel, LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
+                    marginStart = dp(12)
+                })
+            })
         }
 
-        // Right-aligned, read from the right: Spielen, the update button, the installed version.
+        // Right-aligned, read from the right: Spielen, the update button.
         val buttons = LinearLayout(context).apply {
             orientation = HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            addView(versionLabel, LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
-                marginEnd = dp(12)
-            })
             addView(updateButton, LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT).apply {
                 marginEnd = dp(8)
             })
-            addView(playButton, LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT))
+            // In one row Play is as tall as the app icon, not a full-size control.
+            if (wideHeader)
+                playButton.minHeight = 0
+            addView(playButton, LayoutParams(LayoutParams.WRAP_CONTENT, if (wideHeader) dp(LauncherStyle.HEADER_BUTTON_HEIGHT) else LayoutParams.WRAP_CONTENT))
         }
 
         return LinearLayout(context).apply {
             setPadding(dp(22), dp(12), dp(22), dp(12))
-            if (wide) {
+            if (wideHeader) {
                 orientation = HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
                 addView(brand, LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f))
