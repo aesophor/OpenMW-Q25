@@ -1,0 +1,148 @@
+--- a/apps/openmw/mwrender/animation.hpp
++++ b/apps/openmw/mwrender/animation.hpp
+@@ -456,6 +456,8 @@
+         void setPlayScriptedOnly(bool playScriptedOnly) { mPlayScriptedOnly = playScriptedOnly; }
+ 
+         virtual bool useShieldAnimations() const { return false; }
++        /// Moves the holstered shield bone by @a offset (in its parent bone's space) from its skeleton position.
++        virtual void setHolsteredShieldOffset(const osg::Vec3f& offset) {}
+         virtual bool getWeaponsShown() const { return false; }
+         virtual void showWeapons(bool showWeapon) {}
+         virtual bool getCarriedLeftShown() const { return false; }
+--- a/apps/openmw/mwrender/actoranimation.hpp
++++ b/apps/openmw/mwrender/actoranimation.hpp
+@@ -3,6 +3,8 @@
+ 
+ #include <map>
+ 
++#include <osg/Vec3f>
++#include <osg/observer_ptr>
+ #include <osg/ref_ptr>
+ 
+ #include <components/vfs/pathutil.hpp>
+@@ -42,6 +44,7 @@
+         virtual bool isArrowAttached() const { return false; }
+         bool useShieldAnimations() const override;
+         bool updateCarriedLeftVisible(const int weaptype) const override;
++        void setHolsteredShieldOffset(const osg::Vec3f& offset) override;
+ 
+         void removeFromScene() override;
+ 
+@@ -66,11 +69,16 @@
+     private:
+         void addHiddenItemLight(const MWWorld::ConstPtr& item, const ESM::Light* esmLight);
+         void removeHiddenItemLight(const MWWorld::ConstPtr& item);
++        void applyHolsteredShieldOffset();
+         void resetControllers(osg::Node* node);
+         void removeFromSceneImpl();
+ 
+         typedef std::map<MWWorld::ConstPtr, osg::ref_ptr<SceneUtil::LightSource>> ItemLightMap;
+         ItemLightMap mItemLights;
++
++        osg::Vec3f mHolsteredShieldOffset;
++        osg::observer_ptr<osg::MatrixTransform> mHolsteredShieldBone;
++        osg::Vec3f mHolsteredShieldBoneTranslation;
+     };
+ 
+ }
+--- a/apps/openmw/mwrender/actoranimation.cpp
++++ b/apps/openmw/mwrender/actoranimation.cpp
+@@ -2,6 +2,7 @@
+ #include <utility>
+ 
+ #include <osg/Group>
++#include <osg/MatrixTransform>
+ #include <osg/Node>
+ #include <osg/Vec4f>
+ 
+@@ -20,6 +21,8 @@
+ 
+ #include <components/misc/resourcehelpers.hpp>
+ 
++#include <components/nifosg/matrixtransform.hpp>
++
+ #include <components/settings/values.hpp>
+ 
+ #include <components/vfs/manager.hpp>
+@@ -192,6 +195,7 @@
+         if (!mPtr.getClass().hasInventoryStore(mPtr))
+             return;
+ 
++        applyHolsteredShieldOffset();
+         mHolsteredShield.reset();
+ 
+         if (showCarriedLeft)
+@@ -249,6 +253,36 @@
+         }
+     }
+ 
++    void ActorAnimation::setHolsteredShieldOffset(const osg::Vec3f& offset)
++    {
++        mHolsteredShieldOffset = offset;
++        applyHolsteredShieldOffset();
++    }
++
++    void ActorAnimation::applyHolsteredShieldOffset()
++    {
++        // The skeleton can be rebuilt, so remember the original translation per bone instance.
++        auto* bone = dynamic_cast<osg::MatrixTransform*>(getBoneByName("Bip01 AttachShield"));
++        if (!bone)
++            return;
++
++        if (mHolsteredShieldBone.get() != bone)
++        {
++            mHolsteredShieldBone = bone;
++            mHolsteredShieldBoneTranslation = bone->getMatrix().getTrans();
++        }
++
++        const osg::Vec3f translation = mHolsteredShieldBoneTranslation + mHolsteredShieldOffset;
++        if (auto* nifBone = dynamic_cast<NifOsg::MatrixTransform*>(bone))
++            nifBone->setTranslation(translation);
++        else
++        {
++            osg::Matrix matrix = bone->getMatrix();
++            matrix.setTrans(translation);
++            bone->setMatrix(matrix);
++        }
++    }
++
+     bool ActorAnimation::useShieldAnimations() const
+     {
+         if (!Settings::game().mShieldSheathing)
+--- a/apps/openmw/mwlua/animationbindings.cpp
++++ b/apps/openmw/mwlua/animationbindings.cpp
+@@ -275,6 +275,15 @@
+                 "removeVfxAction");
+         };
+ 
++        api["setHolsteredShieldOffset"] = [context](const SelfObject& object, const osg::Vec3f& offset) {
++            context.mLuaManager->addAction(
++                [object = Object(object), offset] {
++                    MWRender::Animation* anim = getMutableAnimationOrThrow(object);
++                    anim->setHolsteredShieldOffset(offset);
++                },
++                "setHolsteredShieldOffsetAction");
++        };
++
+         api["removeAllVfx"] = [context](const SelfObject& object) {
+             context.mLuaManager->addAction(
+                 [object = Object(object)] {
+--- a/files/lua_api/openmw/animation.lua
++++ b/files/lua_api/openmw/animation.lua
+@@ -262,6 +262,16 @@
+ -- @function [parent=#animation] removeAllVfx
+ -- @param openmw.core#GameObject actor
+ 
++---
++-- Moves the holstered (sheathed) shield away from its skeleton position.
++-- The offset is in the space of the shield bone's parent (Bip01 Spine2 for the default skeletons; -Y points away
++-- from the back). Pass util.vector3(0, 0, 0) to restore the original position. Not saved; scripts should reapply it
++-- after loading.
++-- Can only be used on self.
++-- @function [parent=#animation] setHolsteredShieldOffset
++-- @param openmw.core#GameObject actor
++-- @param openmw.util#Vector3 offset
++
+ 
+ 
+ 
