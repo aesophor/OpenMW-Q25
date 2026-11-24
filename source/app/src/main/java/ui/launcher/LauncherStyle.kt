@@ -98,11 +98,11 @@ object LauncherStyle {
             if (bold) typeface = Typeface.DEFAULT_BOLD
         }
 
-    /** A section label in small capitals, as above each group in CubeEvil4. */
+    /** A section label in small capitals, as above each group in CubeEvil4; the space above separates the groups. */
     fun sectionLabel(context: Context, label: CharSequence): TextView =
-        text(context, label.toString().uppercase(), 13f, true, MUTED).apply {
-            letterSpacing = 0.14f
-            setPadding(0, dp(context, 14), 0, dp(context, 6))
+        text(context, label.toString().uppercase(), 15f, true, MUTED).apply {
+            letterSpacing = 0.08f
+            setPadding(0, dp(context, 20), 0, dp(context, 6))
         }
 
     /** A plain button of the common height. */
