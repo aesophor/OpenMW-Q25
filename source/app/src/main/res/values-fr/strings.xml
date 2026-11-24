@@ -232,7 +232,7 @@
     <string name="launcher_section_game_data">Données du jeu</string>
     <string name="launcher_section_settings">Paramètres</string>
     <string name="launcher_game_data_title">Morrowind</string>
-    <string name="launcher_status_found">Trouvé</string>
+    <string name="launcher_status_found">Installé</string>
     <string name="launcher_status_missing">Introuvable</string>
     <string name="launcher_status_not_chosen">Non choisi</string>
     <string name="launcher_game_data_not_chosen">Choisissez le dossier qui contient Data Files et Morrowind.ini.</string>

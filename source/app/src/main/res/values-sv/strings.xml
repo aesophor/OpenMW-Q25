@@ -232,7 +232,7 @@
     <string name="launcher_section_game_data">Speldata</string>
     <string name="launcher_section_settings">Inställningar</string>
     <string name="launcher_game_data_title">Morrowind</string>
-    <string name="launcher_status_found">Hittad</string>
+    <string name="launcher_status_found">Installerad</string>
     <string name="launcher_status_missing">Hittades inte</string>
     <string name="launcher_status_not_chosen">Inte vald</string>
     <string name="launcher_game_data_not_chosen">Välj mappen som innehåller Data Files och Morrowind.ini.</string>
