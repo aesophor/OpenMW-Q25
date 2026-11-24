@@ -248,7 +248,7 @@
     <string name="launcher_tile_mods">Moddar</string>
     <string name="launcher_tile_mods_summary">Plugins, laddordning, markväxtlighet</string>
     <string name="launcher_tile_help">Hjälp och info</string>
-    <string name="launcher_tile_help_summary">Om, återställ, GitHub</string>
+    <string name="launcher_tile_help_summary">Om, GitHub</string>
     <string name="launcher_help_github">Projektet på GitHub</string>
     <string name="launcher_back">‹ Tillbaka</string>
     <string name="launcher_on">PÅ</string>

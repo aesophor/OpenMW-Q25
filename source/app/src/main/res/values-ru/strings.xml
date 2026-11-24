@@ -248,7 +248,7 @@
     <string name="launcher_tile_mods">Моды</string>
     <string name="launcher_tile_mods_summary">Плагины, порядок загрузки, растительность</string>
     <string name="launcher_tile_help">Справка</string>
-    <string name="launcher_tile_help_summary">О программе, сброс, GitHub</string>
+    <string name="launcher_tile_help_summary">О программе, GitHub</string>
     <string name="launcher_help_github">Проект на GitHub</string>
     <string name="launcher_back">‹ Назад</string>
     <string name="launcher_on">ВКЛ</string>

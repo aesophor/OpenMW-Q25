@@ -248,7 +248,7 @@
     <string name="launcher_tile_mods">Mods</string>
     <string name="launcher_tile_mods_summary">Plugins, ordre de chargement, végétation</string>
     <string name="launcher_tile_help">Aide et infos</string>
-    <string name="launcher_tile_help_summary">À propos, réinitialiser, GitHub</string>
+    <string name="launcher_tile_help_summary">À propos, GitHub</string>
     <string name="launcher_help_github">Projet sur GitHub</string>
     <string name="launcher_back">‹ Retour</string>
     <string name="launcher_on">OUI</string>

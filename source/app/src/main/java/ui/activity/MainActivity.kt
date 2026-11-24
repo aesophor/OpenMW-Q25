@@ -317,15 +317,6 @@ class MainActivity : AppCompatActivity() {
         val entries = mutableListOf<Pair<String, () -> Unit>>()
         entries += getString(R.string.action_about) to { showAboutDialog() }
         entries += getString(R.string.launcher_help_github) to { openUrl(PROJECT_URL) }
-        entries += getString(R.string.action_reset_user_config) to {
-            removeUserConfig()
-            Toast.makeText(this, getString(R.string.user_config_was_reset), Toast.LENGTH_SHORT).show()
-        }
-        entries += getString(R.string.action_reset_user_resources) to {
-            removeStaticFiles()
-            removeResourceFiles()
-            Toast.makeText(this, getString(R.string.user_resources_was_reset), Toast.LENGTH_SHORT).show()
-        }
         if (MyApp.haveBugsnagApiKey)
             entries += getString(R.string.action_bugsnag_consent) to { askBugsnagConsent() }
 

@@ -345,7 +345,7 @@
     <string name="launcher_tile_mods">Mods</string>
     <string name="launcher_tile_mods_summary">Plugins, load order, groundcover</string>
     <string name="launcher_tile_help">Help &amp; Info</string>
-    <string name="launcher_tile_help_summary">About, reset, GitHub</string>
+    <string name="launcher_tile_help_summary">About, GitHub</string>
     <string name="launcher_help_github">Project on GitHub</string>
     <string name="launcher_back">‹ Back</string>
     <string name="launcher_on">ON</string>

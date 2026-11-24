@@ -248,7 +248,7 @@
     <string name="launcher_tile_mods">Mody</string>
     <string name="launcher_tile_mods_summary">Wtyczki, kolejność, roślinność</string>
     <string name="launcher_tile_help">Pomoc i informacje</string>
-    <string name="launcher_tile_help_summary">O aplikacji, reset, GitHub</string>
+    <string name="launcher_tile_help_summary">O aplikacji, GitHub</string>
     <string name="launcher_help_github">Projekt na GitHubie</string>
     <string name="launcher_back">‹ Wstecz</string>
     <string name="launcher_on">WŁ.</string>
