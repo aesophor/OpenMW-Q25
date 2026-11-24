@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory android:key="cat_ui" android:title="@string/pref_ui">
-        <Preference android:key="pref_uiScaling" android:title="@string/pref_uiScaling" />
         <ListPreference android:key="pref_mouse_mode" android:title="@string/pref_mouse_mode" android:dialogTitle="@string/pref_mouse_mode" android:entries="@array/pref_mouse_mode_entries" android:entryValues="@array/pref_mouse_mode_values" android:defaultValue="@string/pref_mouse_mode_default" android:summary="%s" />
         <CheckBoxPreference android:key="pref_omw050_controller_menus" android:title="@string/pref_omw050_controller_menus_title" android:summary="@string/pref_omw050_controller_menus_summary" android:defaultValue="false" />
         <CheckBoxPreference android:key="pref_omw050_controller_tooltips" android:title="@string/pref_omw050_controller_tooltips_title" android:summary="@string/pref_omw050_controller_tooltips_summary" android:dependency="pref_omw050_controller_menus" android:defaultValue="false" />

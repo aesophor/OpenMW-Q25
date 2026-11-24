@@ -42,7 +42,6 @@ import com.libopenmw.openmw.R
 import constants.Constants
 
 import ui.activity.ConfigureControls
-import utils.MyApp
 import java.util.*
 
 /**
@@ -64,13 +63,6 @@ class FragmentSettings : PreferenceFragment(), OnSharedPreferenceChangeListener 
             activity,
             preferenceScreen,
             sliders = mapOf(
-                "pref_uiScaling" to ui.launcher.PreferencePageView.SliderSpec(
-                    minimum = 0.5f, maximum = 3.0f, step = 0.1f,
-                    defaultValue = MyApp.app.defaultScaling.coerceIn(0.5f, 3.0f),
-                    autoLabel = {
-                        MyApp.app.getString(R.string.uiScaling_auto).format(Locale.ROOT, MyApp.app.defaultScaling)
-                    }
-                ),
                 "pref_gamma" to ui.launcher.PreferencePageView.SliderSpec(
                     minimum = 1.0f, maximum = 3.0f, step = 0.1f, defaultValue = 1.0f
                 )
@@ -100,19 +92,6 @@ class FragmentSettings : PreferenceFragment(), OnSharedPreferenceChangeListener 
         // Make launcher entries that open another screen visually distinct.
         listOf("pref_controls").forEach { key ->
             findPreference(key)?.widgetLayoutResource = R.layout.preference_widget_chevron
-        }
-
-        findPreference("pref_uiScaling")?.setOnPreferenceClickListener {
-            showSteppedSliderPreference(
-                key = "pref_uiScaling",
-                title = getString(R.string.pref_uiScaling),
-                minimum = 0.5f,
-                maximum = 3.0f,
-                step = 0.1f,
-                defaultValue = MyApp.app.defaultScaling.coerceIn(0.5f, 3.0f),
-                neutralLabel = getString(R.string.slider_auto)
-            )
-            true
         }
 
         findPreference("pref_customResolution")?.setOnPreferenceClickListener {
@@ -432,15 +411,6 @@ class FragmentSettings : PreferenceFragment(), OnSharedPreferenceChangeListener 
             return
         val sharedPref = preference.sharedPreferences
         when (key) {
-            "pref_uiScaling" -> {
-                val value = sharedPref.getString(key, "") ?: ""
-                preference.summary = if (value.isEmpty()) {
-                    MyApp.app.getString(R.string.uiScaling_auto)
-                        .format(Locale.ROOT, MyApp.app.defaultScaling)
-                } else {
-                    value
-                }
-            }
             "pref_customResolution" -> {
                 val value = sharedPref.getString(key, "") ?: ""
                 preference.summary = if (value.isEmpty()) getString(R.string.resolution_native) else value.replace('x', '×')

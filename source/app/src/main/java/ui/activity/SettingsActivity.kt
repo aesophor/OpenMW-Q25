@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import file.GameInstaller
+import utils.MyApp
 import android.view.MenuItem
 import android.view.Gravity
 import android.widget.LinearLayout
@@ -178,6 +179,15 @@ class FragmentGameSettingsPage : PreferenceFragment(), OnSharedPreferenceChangeL
         val sliders = when (pageResource) {
             R.xml.gs_visuals -> mapOf(
                 "gs_object_paging_min_size" to slider(0.01f, 1.0f, 0.01f, 0.25f, 2)
+            )
+            R.xml.gs_interface -> mapOf(
+                "pref_uiScaling" to ui.launcher.PreferencePageView.SliderSpec(
+                    minimum = 0.5f, maximum = 3.0f, step = 0.1f,
+                    defaultValue = MyApp.app.defaultScaling.coerceIn(0.5f, 3.0f),
+                    autoLabel = {
+                        MyApp.app.getString(R.string.uiScaling_auto).format(Locale.ROOT, MyApp.app.defaultScaling)
+                    }
+                )
             )
             R.xml.gs_engine -> mapOf(
                 "gs_groundcover_density" to slider(0.0f, 1.0f, 0.05f, 1.0f, 2),
