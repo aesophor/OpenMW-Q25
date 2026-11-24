@@ -437,17 +437,26 @@ class PreferencePageView(
             }
         }
 
+        // Auto sits inside the slider's box, so it is smaller than a full control.
+        val autoButton = spec.autoLabel?.let {
+            LauncherStyle.button(context, context.getString(R.string.slider_auto)) {
+                prefs.edit().putString(key, "").apply()
+            }.apply {
+                minHeight = 0
+                setPadding(dp(14), 0, dp(14), 0)
+            }
+        }
+        // Boxed like the other controls: slider, value and Auto in one frame.
         val control = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
             minimumHeight = dp(LauncherStyle.CONTROL_HEIGHT)
+            background = LauncherStyle.shape(context, LauncherStyle.SURFACE, LauncherStyle.BORDER)
+            setPadding(dp(4), 0, dp(10), 0)
             addView(seekBar, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
             addView(valueLabel, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { marginStart = dp(10) })
-            if (spec.autoLabel != null) {
-                addView(LauncherStyle.button(context, context.getString(R.string.slider_auto)) {
-                    prefs.edit().putString(key, "").apply()
-                }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { marginStart = dp(10) })
-            }
+            if (autoButton != null)
+                addView(autoButton, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, dp(LauncherStyle.HEADER_BUTTON_HEIGHT)).apply { marginStart = dp(10) })
         }
 
         updaters += {
@@ -456,6 +465,15 @@ class PreferencePageView(
             val shown = value ?: spec.defaultValue.coerceIn(spec.minimum, spec.maximum)
             seekBar.progress = ((shown - spec.minimum) / spec.step).roundToInt().coerceIn(0, steps)
             valueLabel.text = if (value == null && spec.autoLabel != null) spec.autoLabel.invoke() else format(shown)
+            // Gold while Auto is in use, like a selected option.
+            autoButton?.let { button ->
+                val auto = value == null
+                button.setTextColor(if (auto) LauncherStyle.GOLD else LauncherStyle.INK)
+                button.background = if (auto)
+                    LauncherStyle.background(context, LauncherStyle.ACTIVE, LauncherStyle.GOLD, pressed = 0xff4a3a22.toInt())
+                else
+                    LauncherStyle.background(context, LauncherStyle.SURFACE, LauncherStyle.BORDER)
+            }
         }
         val view = row(preference.title ?: "", control, explanation, halves = true)
         bindEnabled(view, preference)
